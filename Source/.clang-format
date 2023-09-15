@@ -1,0 +1,15 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+ColumnLimit: 100
+SpaceBeforeCpp11BracedList: true
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+QualifierAlignment: Right
+PointerAlignment: Left
+DerivePointerAlignment: false
+RemoveBracesLLVM: true
+---
+Language: Json
+BasedOnStyle: llvm
