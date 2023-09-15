@@ -56,8 +56,14 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    juce::AudioProcessLoadMeasurer& getLoadMeasurer() {
+        return loadMeasurer_;
+    }
+
 private:
     juce::dsp::Oscillator<float> oscillator_;
+    juce::AudioProcessLoadMeasurer loadMeasurer_;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BusyBoxAudioProcessor)
 };

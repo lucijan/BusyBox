@@ -16,6 +16,7 @@ BusyBoxAudioProcessorEditor::BusyBoxAudioProcessorEditor (BusyBoxAudioProcessor&
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+    startTimer(500);
 }
 
 BusyBoxAudioProcessorEditor::~BusyBoxAudioProcessorEditor()
@@ -30,11 +31,19 @@ void BusyBoxAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+
+    auto const load = audioProcessor.getLoadMeasurer().getLoadAsPercentage();
+
+    g.drawFittedText (juce::String(load, 1) + "%", getLocalBounds(),
+                      juce::Justification::centred, 1);
 }
 
 void BusyBoxAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+}
+
+void BusyBoxAudioProcessorEditor::timerCallback() {
+    repaint();
 }

@@ -9,6 +9,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+static constexpr double kSimulatedLoad = 0.6;
+
 //==============================================================================
 BusyBoxAudioProcessor::BusyBoxAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -104,6 +106,7 @@ void BusyBoxAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     spec.numChannels = 2;
 
     oscillator_.prepare(spec);
+    loadMeasurer_.reset(sampleRate, samplesPerBlock);
 }
 
 void BusyBoxAudioProcessor::releaseResources()
@@ -140,6 +143,10 @@ bool BusyBoxAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void BusyBoxAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    double begin = juce::Time::getMillisecondCounterHiRes();
+    double max = kSimulatedLoad * (buffer.getNumSamples() / getSampleRate());
+    juce::AudioProcessLoadMeasurer::ScopedTimer timer(loadMeasurer_);
+
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -151,6 +158,11 @@ void BusyBoxAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     juce::dsp::ProcessContextReplacing<float> context(block);
     oscillator_.process(context);
     block.multiplyBy(0.8f);
+
+    volatile int counter = 0;
+    while ((juce::Time::getMillisecondCounterHiRes() - begin) / 1000.0 < max) {
+        counter++;
+    }
 }
 
 //==============================================================================

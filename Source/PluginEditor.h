@@ -14,7 +14,8 @@
 //==============================================================================
 /**
 */
-class BusyBoxAudioProcessorEditor  : public juce::AudioProcessorEditor
+class BusyBoxAudioProcessorEditor  : public juce::AudioProcessorEditor,
+                                     private juce::Timer
 {
 public:
     BusyBoxAudioProcessorEditor (BusyBoxAudioProcessor&);
@@ -25,6 +26,7 @@ public:
     void resized() override;
 
 private:
+    void timerCallback() override;
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     BusyBoxAudioProcessor& audioProcessor;
